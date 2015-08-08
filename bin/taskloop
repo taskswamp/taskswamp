@@ -1,2 +1,0 @@
-#!/usr/bin/env zsh
-while clear; date; task "$@" ; ! read -q _; do done

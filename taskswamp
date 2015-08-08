@@ -9,7 +9,7 @@ from shlex import quote
 
 THISDIR = os.path.dirname(os.path.abspath(__file__))
 XPM_PATH = os.path.join(THISDIR, 'imported/tw-l-15.xpm')
-TASKLOOP = os.path.join(THISDIR, 'bin/taskloop')
+FOREVER = os.path.join(THISDIR, 'bin/forever')
 del THISDIR
 PROGNAME = os.path.basename(sys.argv[0])
 
@@ -36,7 +36,7 @@ class TmuxWindow:
 
         # Set self.cmd
         if 'task' in jsonobj:
-            cmd = TASKLOOP + ' ' + jsonobj['task']
+            cmd = ' '.join([FOREVER, 'task', jsonobj['task']])
         else:
             cmd = jsonobj['cmd']
         if type(cmd) == type([]):
