@@ -54,7 +54,7 @@ That said, patches _are_ welcome; email the author or open a GitHub issue.
 Dependencies
 ------------
 
-Required: Python 3; tmux; zsh.
+Required: Python 3; Taskwarrior; tmux; zsh.
 
 Is `screen` supported?
 ----------------------
@@ -69,3 +69,11 @@ session with multiple windows:
 
 It's just a matter of writing the glue code to invoke `screen` and to choose
 between screen and tmux.
+
+Known issues
+------------
+
+The config file is json because that's easiest to parse.
+
+The code spawns a new XTerm.  Options to spawn other terminal emulators (or to
+just start tmux) have not been implemented.
