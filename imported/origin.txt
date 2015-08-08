@@ -1,0 +1,8 @@
+The file tw-l-15.xpm was derived from the Taskwarrior source tree on 2015-08-08
+by the following procedure:
+
+    unzip $TASKWARRIOR_SOURCE_TREE/doc/ref/task-ref.pages
+    convert Data/tw-l-15.png tw-l-15.xpm
+
+The Taskwarrior logo is owned by the Taskwarrior project and is not covered by
+the same license as Taskswamp itself.  See the LICENSE file for details.

@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+
+import json
+import subprocess
+import os.path
+
+from shlex import quote
+
+THISDIR = os.path.dirname(os.path.abspath(__file__))
+XPM_PATH = os.path.join(THISDIR, 'imported/tw-l-15.xpm')
+TASKLOOP = os.path.join(THISDIR, 'bin/taskloop')
+del THISDIR
+
+
+## Library
+
+def execve_to_system(args):
+    """Given an execve()-style array representing a command to be executed,
+    return a system()-style string representing the same command."""
+    return ' '.join(map(quote, args))
+
+
+## Data model
+
+class TmuxWindow:
+    """Encapsulates the configuration for a single tmux window."""
+
+    # self.cmd (string): comand to be executed
+    # self.name (string): the window title
+    def __init__(self, jsonobj):
+
+        # Set self.name
+        self.name = jsonobj['name']
+
+        # Set self.cmd
+        if 'task' in jsonobj:
+            cmd = TASKLOOP + ' ' + jsonobj['task']
+        else:
+            cmd = jsonobj['cmd']
+        if type(cmd) == type([]):
+            self.cmd = execve_to_system(cmd)
+        elif type(cmd) == type(''):
+            self.cmd = cmd
+
+        assert hasattr(self, 'cmd'), \
+          "Invalid configuration: no 'task' or 'cmd' key in %r" % (jsonobj,)
+
+
+##
+
+def main():
+    ## Read the config file.
+    with open(os.path.expanduser('~/.taskswamprc')) as fd:
+        config = json.load(fd)
+    assert config['taskswamp'] == -1, "Missing config format number"
+
+    ## Parse it.
+    sessionname = config.get('sessionname', "task")
+    windows = tuple(TmuxWindow(jsonobj) for jsonobj in config['windows'])
+
+    ## Prepare the tmux session- and window-creation commands.
+    # The first window is part of the 'new-session' command.
+    window_cmds = [['new-window', '-d', '-n', w.name, w.cmd] for w in windows]
+    window_cmds[0][:2] = ['new-session', '-s', sessionname]
+    del windows
+    #del sessionname
+
+    # This is a list of lists; each internal list is a single tmux command
+    tmux_cmds = []
+    tmux_cmds += [['set-option', '-g', 'set-remain-on-exit', 'on']]
+    tmux_cmds += window_cmds
+    del window_cmds
+
+    ## Launch tmux.
+    args = ['tmux'] + sum((cmd+[';'] for cmd in tmux_cmds), [])
+    args = [
+        'xterm',
+        '-xrm', 'XTerm*iconHint: {}'.format(XPM_PATH),
+        '-T', sessionname,
+        '-n', sessionname,
+        '-e', execve_to_system(args),
+    ]
+    subprocess.check_call(args)
+
+if __name__ == '__main__':
+    main()
