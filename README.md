@@ -22,6 +22,8 @@ below, and then run `./taskswamp`:
     EOF
     % ./taskswamp
 
+If you get an error, make sure you have the [dependencies](#dependencies) installed.
+
 The config file format is json.  The `taskswamp` key must be set to `-1` (this
 is a format number for forward compatibility).  The `windows` key must be set
 to an array of window specifications, where each specification contains
