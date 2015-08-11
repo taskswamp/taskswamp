@@ -42,14 +42,11 @@ How do I refresh the task report?
 Press any key except `y`.  (If you press `y`, the last display will remain,
 but will not be updated until you use the tmux `respawnw` colon command.)
 
-Why doesn't `taskswamp` have a usage message, friendly error messages, etc?
----------------------------------------------------------------------------
+Why doesn't `taskswamp` have a usage (`--help`) message, packaging glue, etc?
+-----------------------------------------------------------------------------
 
-This is just a quick ~/bin script that a handful of people use.  Making it
-nicer is a SMOP that has never gotten to the top of our todo lists (for me,
-it's the last item in window #3).
-
-That said, patches _are_ welcome; email the author or open a GitHub issue.
+Because taskswamp has no known users.  It wouldn't be hard to add all these
+niceties, once this project has at least one user.
 
 Dependencies
 ------------
@@ -74,6 +71,11 @@ Known issues
 ------------
 
 The config file is json because that's easiest to parse.
+
+`assert` is used for input validation.  If this project ever has users (which
+currently it doesn't), invalid input should result not in an `AssertionError`
+traceback but in a normal error message (as in the existing `FileNotFoundError`
+handling).
 
 The code spawns a new XTerm.  Options to spawn other terminal emulators (or to
 just start tmux) have not been implemented.
