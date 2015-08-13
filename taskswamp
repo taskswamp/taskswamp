@@ -21,6 +21,12 @@ def execve_to_system(args):
     return a system()-style string representing the same command."""
     return ' '.join(map(quote, args))
 
+def tmux_session_exists(sessionname):
+    "Return TRUE if a tmux session SESSIONNAME is running."
+    return sessionname in set(
+        subprocess.check_output(['tmux', 'list-sessions', '-F', '#S']).decode().splitlines()
+    )
+
 
 ## Data model
 
@@ -77,8 +83,11 @@ def main():
     tmux_cmds += window_cmds
     del window_cmds
 
-    ## Launch tmux.
-    args = ['tmux'] + sum((cmd+[';'] for cmd in tmux_cmds), [])
+    ## Launch tmux, creating the session or attaching to it.
+    if tmux_session_exists(sessionname):
+        args = ['tmux', 'attach-session', '-t', sessionname]
+    else:
+        args = ['tmux'] + sum((cmd+[';'] for cmd in tmux_cmds), [])
     args = [
         'xterm',
         '-xrm', 'XTerm*iconHint: {}'.format(XPM_PATH),
