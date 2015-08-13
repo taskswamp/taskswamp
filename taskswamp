@@ -12,6 +12,7 @@ XPM_PATH = os.path.join(THISDIR, 'imported/tw-l-15.xpm')
 FOREVER = os.path.join(THISDIR, 'bin/forever')
 del THISDIR
 PROGNAME = os.path.basename(sys.argv[0])
+TMUX = 'tmux' # path to the tmux binary
 
 
 ## Library
@@ -24,7 +25,7 @@ def execve_to_system(args):
 def tmux_session_exists(sessionname):
     "Return TRUE if a tmux session SESSIONNAME is running."
     return sessionname in set(
-        subprocess.check_output(['tmux', 'list-sessions', '-F', '#S']).decode().splitlines()
+        subprocess.check_output([TMUX, 'list-sessions', '-F', '#S']).decode().splitlines()
     )
 
 
@@ -85,9 +86,9 @@ def main():
 
     ## Launch tmux, creating the session or attaching to it.
     if tmux_session_exists(sessionname):
-        args = ['tmux', 'attach-session', '-t', sessionname]
+        args = [TMUX, 'attach-session', '-t', sessionname]
     else:
-        args = ['tmux'] + sum((cmd+[';'] for cmd in tmux_cmds), [])
+        args = [TMUX] + sum((cmd+[';'] for cmd in tmux_cmds), [])
     args = [
         'xterm',
         '-xrm', 'XTerm*iconHint: {}'.format(XPM_PATH),
