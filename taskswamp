@@ -94,8 +94,7 @@ def main():
         '-xrm', 'XTerm*iconHint: {}'.format(XPM_PATH),
         '-T', sessionname,
         '-n', sessionname,
-        '-e', execve_to_system(args),
-    ]
+    ] + ['-e'] + args
     subprocess.check_call(args)
 
 if __name__ == '__main__':
