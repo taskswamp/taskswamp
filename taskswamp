@@ -12,6 +12,7 @@ XPM_PATH = os.path.join(THISDIR, 'imported/tw-l-15.xpm')
 FOREVER = os.path.join(THISDIR, 'bin/forever')
 del THISDIR
 PROGNAME = os.path.basename(sys.argv[0])
+TASK = 'task' # path to the task binary
 TMUX = 'tmux' # path to the tmux binary
 
 
@@ -43,7 +44,7 @@ class TmuxWindow:
 
         # Set self.cmd
         if 'task' in jsonobj:
-            cmd = ' '.join([FOREVER, 'task', jsonobj['task']])
+            cmd = ' '.join([FOREVER, TASK, jsonobj['task']])
         else:
             cmd = jsonobj['cmd']
         if type(cmd) == type([]):
