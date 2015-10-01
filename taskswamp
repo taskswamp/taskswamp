@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import functools
 import json
 import subprocess
 import os.path
@@ -14,6 +15,20 @@ del THISDIR
 PROGNAME = os.path.basename(sys.argv[0])
 TASK = 'task' # path to the task binary
 TMUX = 'tmux' # path to the tmux binary
+
+@functools.lru_cache(maxsize=1)
+def taskdir():
+    "Return `task show data.location`."
+    output = subprocess.check_output(['task', '_show'])
+    lines = output.decode('UTF-8').splitlines()
+    prefix = 'data.location='
+    for line in lines:
+        if line.startswith(prefix):
+            return os.path.expanduser(line[len(prefix):].rstrip('\n'))
+    else:
+        assert False, "`task _show` did not report data.location"
+LOCK_FILENAME = os.path.join(taskdir(), ".taskswamp.lock")
+LOCK_TIMEOUT = 5 # seconds
 
 
 ## Library
@@ -44,7 +59,9 @@ class TmuxWindow:
 
         # Set self.cmd
         if 'task' in jsonobj:
-            cmd = ' '.join([FOREVER, TASK, jsonobj['task']])
+            cmd = ' '.join([FOREVER,
+                            'flock', '-x', '-w', str(LOCK_TIMEOUT), LOCK_FILENAME,
+                            TASK, jsonobj['task']])
         else:
             cmd = jsonobj['cmd']
         if type(cmd) == type([]):

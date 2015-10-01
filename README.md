@@ -53,7 +53,7 @@ niceties, once this project has at least one user.
 Dependencies
 ------------
 
-Required: Python 3; Taskwarrior; tmux; zsh.
+Required: Python 3; Taskwarrior; flock(1); tmux; zsh.
 
 Is `screen` supported?
 ----------------------
