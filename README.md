@@ -42,7 +42,7 @@ How do I refresh the task report?
 ---------------------------------
 
 Press any key except `y`.  (If you press `y`, the last display will remain,
-but will not be updated until you use the tmux `respawnw` colon command.)
+but will not be updated until you use the tmux `respawn-window` colon command.)
 
 Why doesn't `taskswamp` have a usage (`--help`) message, packaging glue, etc?
 -----------------------------------------------------------------------------
