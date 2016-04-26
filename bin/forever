@@ -3,4 +3,5 @@
 # This script runs a command and prompts the user.  If the user types
 # 'y' then exit.  If the user types anything else, loop.
 
-while clear; date; "$@" ; ! read -q _; do done
+local unused
+while clear; date; "$@" ; ! read -q unused; do done
