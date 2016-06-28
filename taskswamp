@@ -13,8 +13,6 @@ XPM_PATH = os.path.join(THISDIR, 'imported/tw-l-15.xpm')
 FOREVER = os.path.join(THISDIR, 'bin/forever')
 del THISDIR
 PROGNAME = os.path.basename(sys.argv[0])
-TASK = 'task' # path to the task binary
-TMUX = 'tmux' # path to the tmux binary
 
 @functools.lru_cache(maxsize=1)
 def taskdir():
@@ -41,7 +39,7 @@ def execve_to_system(args):
 def tmux_session_exists(sessionname):
     "Return TRUE if a tmux session SESSIONNAME is running."
     return sessionname in set(
-        subprocess.check_output([TMUX, 'list-sessions', '-F', '#S']).decode().splitlines()
+        subprocess.check_output([globalconfig['tmuxbinary'], 'list-sessions', '-F', '#S']).decode().splitlines()
     )
 
 
@@ -61,7 +59,7 @@ class TmuxWindow:
         if 'task' in jsonobj:
             cmd = ' '.join([FOREVER,
                             'flock', '-x', '-w', str(LOCK_TIMEOUT), LOCK_FILENAME,
-                            TASK, jsonobj['task']])
+                            globalconfig['taskbinary'], jsonobj['task']])
         else:
             cmd = jsonobj['cmd']
         if type(cmd) == type([]):
@@ -87,6 +85,13 @@ def main():
 
     ## Parse it.
     sessionname = config.get('sessionname', "task")
+
+    global globalconfig
+    globalconfig = {
+      "taskbinary": config.get('taskbinary', "task"),
+      "tmuxbinary": config.get('tmuxbinary', "tmux"),
+    }
+
     windows = tuple(TmuxWindow(jsonobj) for jsonobj in config['windows'])
 
     ## Prepare the tmux session- and window-creation commands.
@@ -104,9 +109,9 @@ def main():
 
     ## Launch tmux, creating the session or attaching to it.
     if tmux_session_exists(sessionname):
-        args = [TMUX, 'attach-session', '-t', sessionname]
+        args = [globalconfig['tmuxbinary'], 'attach-session', '-t', sessionname]
     else:
-        args = [TMUX] + sum((cmd+[';'] for cmd in tmux_cmds), [])
+        args = [globalconfig['tmuxbinary']] + sum((cmd+[';'] for cmd in tmux_cmds), [])
     args = [
         'xterm',
         '-xrm', 'XTerm*iconHint: {}'.format(XPM_PATH),
