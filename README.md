@@ -13,6 +13,9 @@ below, and then run `./taskswamp`:
 
     % cat >> ~/.taskswamprc <<'EOF'
     { "taskswamp": -1,
+      "sessionname": "taskwarrior",
+      "taskbinary": "task",
+      "tmuxbinary": "tmux",
       "windows": [
         { "name": "main", "task": "" },
         { "name": "waiting", "task": "waiting" },
