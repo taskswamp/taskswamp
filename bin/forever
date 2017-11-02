@@ -1,7 +1,15 @@
 #!/usr/bin/env zsh
 
+refresh_every="$1"
+shift
+
+if [ "$refresh_every" -eq "0" ]; then
 # This script runs a command and prompts the user.  If the user types
 # 'y' then exit.  If the user types anything else, loop.
+   local unused
+   while clear; date; "$@" ; ! read -q unused; do done
+   exit;
+fi
 
-local unused
-while clear; date; "$@" ; ! read -q unused; do done
+# This scrip runs a command every $refresh_every seconds.
+while clear; date; "$@" ; sleep $refresh_every ; do done
