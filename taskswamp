@@ -88,7 +88,14 @@ def main():
     refresh_every = "0"
     if 'refresh_every' in config:
         refresh_every = config['refresh_every']
-    assert int(refresh_every) >= 0
+    try:
+        refresh_every = float(refresh_every)
+        assert refresh_every >= 0, \
+          "Invalid configuration: refresh_every can't be negative"
+
+    except ValueError:
+        assert False, \
+          "Invalid configuration: refresh_every is not a numerical value"
 
     ## Parse it.
     sessionname = config.get('sessionname', "task")
