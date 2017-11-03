@@ -85,9 +85,7 @@ def main():
 
     assert config['taskswamp'] == -1, "Missing config format number"
 
-    refresh_every = "0"
-    if 'refresh_every' in config:
-        refresh_every = config['refresh_every']
+    refresh_every = config.get('refresh_every', "0")
     try:
         refresh_every = float(refresh_every)
         assert refresh_every >= 0, \
