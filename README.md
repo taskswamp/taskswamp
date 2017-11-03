@@ -13,6 +13,7 @@ below, and then run `./taskswamp`:
 
     % cat >> ~/.taskswamprc <<'EOF'
     { "taskswamp": -1,
+      "refresh_every": 0,
       "windows": [
         { "name": "main", "task": "" },
         { "name": "waiting", "task": "waiting" },
@@ -41,7 +42,10 @@ FAQ
 How do I refresh the task report?
 ---------------------------------
 
-Press any key except `y`.  (If you press `y`, the last display will remain,
+If the optional `refresh_every` key is set to a value greater than 0, the task
+report is automaticaly refreshed every specified seconds.
+
+Else, press any key except `y`.  (If you press `y`, the last display will remain,
 but will not be updated until you use the tmux `respawn-window` colon command.)
 
 Why doesn't `taskswamp` have a usage (`--help`) message, packaging glue, etc?
