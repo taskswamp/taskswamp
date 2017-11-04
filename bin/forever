@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# This script runs a command forever. Its frist argument ($refresh_every)
+# This script runs a command forever. Its first argument ($refresh_every)
 # determines if the command should refresh automaticaly.
 #
 # If $refresh_every is greater than 0, the command will refresh
