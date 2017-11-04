@@ -42,8 +42,8 @@ FAQ
 How do I refresh the task report?
 ---------------------------------
 
-If the optional `refresh_every` key is set to a value greater than 0, the task
-report is automaticaly refreshed every specified seconds.
+If the optional `refresh_every` key set a value to `N` greater than 0, the task
+report is automaticaly refreshed every `N` seconds.
 
 Else, press any key except `y`.  (If you press `y`, the last display will remain,
 but will not be updated until you use the tmux `respawn-window` colon command.)
