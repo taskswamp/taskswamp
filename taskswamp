@@ -90,7 +90,6 @@ def main():
         refresh_every = float(refresh_every)
         assert refresh_every >= 0, \
           "Invalid configuration: refresh_every can't be negative"
-
     except ValueError:
         assert False, \
           "Invalid configuration: refresh_every is not a numerical value"
