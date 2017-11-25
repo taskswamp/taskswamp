@@ -10,7 +10,7 @@
 refresh_every="$1"
 shift
 
-if [ $(echo "$refresh_every==0" | bc) -eq 1 ]; then
+if (( refresh_every == 0 )); then
    local unused
    while clear; date; "$@" ; ! read -q unused; do done
    exit;
