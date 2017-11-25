@@ -52,7 +52,7 @@ class TmuxWindow:
 
     # self.cmd (string): comand to be executed
     # self.name (string): the window title
-    def __init__(self, jsonobj):
+    def __init__(self, jsonobj, refresh_every):
 
         # Set self.name
         self.name = jsonobj['name']
@@ -60,6 +60,7 @@ class TmuxWindow:
         # Set self.cmd
         if 'task' in jsonobj:
             cmd = ' '.join([FOREVER,
+                            str(refresh_every),
                             'flock', '-x', '-w', str(LOCK_TIMEOUT), LOCK_FILENAME,
                             TASK, jsonobj['task']])
         else:
@@ -68,7 +69,6 @@ class TmuxWindow:
             self.cmd = execve_to_system(cmd)
         elif type(cmd) == type(''):
             self.cmd = cmd
-
         assert hasattr(self, 'cmd'), \
           "Invalid configuration: no 'task' or 'cmd' key in %r" % (jsonobj,)
 
@@ -85,9 +85,18 @@ def main():
 
     assert config['taskswamp'] == -1, "Missing config format number"
 
+    refresh_every = config.get('refresh_every', "0")
+    try:
+        refresh_every = float(refresh_every)
+        assert refresh_every >= 0, \
+          "Invalid configuration: refresh_every can't be negative"
+    except ValueError:
+        assert False, \
+          "Invalid configuration: refresh_every is not a numerical value"
+
     ## Parse it.
     sessionname = config.get('sessionname', "task")
-    windows = tuple(TmuxWindow(jsonobj) for jsonobj in config['windows'])
+    windows = tuple(TmuxWindow(jsonobj, refresh_every) for jsonobj in config['windows'])
 
     ## Prepare the tmux session- and window-creation commands.
     # The first window is part of the 'new-session' command.

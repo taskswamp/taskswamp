@@ -1,7 +1,19 @@
 #!/usr/bin/env zsh
+# This script runs a command forever. Its first argument ($refresh_every)
+# determines if the command should refresh automaticaly.
+#
+# If $refresh_every is greater than 0, the command will refresh
+# automaticaly every X seconds.
+# Else, it refreshes when the user type any letter. If
+# this letter is 'y', it exits.
 
-# This script runs a command and prompts the user.  If the user types
-# 'y' then exit.  If the user types anything else, loop.
+refresh_every="$1"
+shift
 
-local unused
-while clear; date; "$@" ; ! read -q unused; do done
+if (( refresh_every == 0 )); then
+   local unused
+   while clear; date; "$@" ; ! read -q unused; do done
+   exit;
+fi
+
+while clear; date; "$@" ; sleep $refresh_every ; do done
