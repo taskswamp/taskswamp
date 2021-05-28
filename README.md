@@ -5,6 +5,13 @@ Taskswamp is a scriptlet that creates a `tmux` session with multiple `task`
 reports and allows those reports to be easily refreshed.  Each tmux window
 shows a single taskwarrior report.
 
+As of 2021/05/28, upstream taskwarrior can corrupt your data if called simultaneously.
+Taskswamp is already fixing this issue as part of https://github.com/taskswamp/taskswamp/commit/2f42a34deb0e09f37483bfa38ed56ee058597422 .
+For full compatibility with Taskswamp, you should wrap your other individual task
+to include the same locking mecanism. For example
+
+    alias task='flock ~/.task/.taskswamp.lock task'
+
 Quick start
 ===========
 
